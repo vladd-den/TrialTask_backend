@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Trial_Task.Data;
 using Trial_Task.Models;
 
 namespace Trial_Task.Controllers
@@ -13,30 +14,28 @@ namespace Trial_Task.Controllers
     [ApiController]
     public class HomeController : ControllerBase
     {
-        private UserContext _context;
-        public HomeController(UserContext context)
+        private readonly IRepository<User> repository;
+        public HomeController(IRepository<User> repository)
         {
-            _context = context;
+            this.repository = repository;
         }
 
         [HttpGet]
         [Route("Users")]
-        public object GetUsers()
+        public async Task<List<User>> GetUsers()
         {
-            var users = _context.Users.ToList();
-            return users;
+            return await repository.GetAll();
         }
 
         [HttpPut]
         [Route("Users/Update")]
-        public object Update(User user)
+        public async Task<Object> Update(User user)
         {
-            if(user != null)
+            if (user != null)
             {
                 try
                 {
-                    _context.Users.Update(user);
-                    _context.SaveChanges();
+                    await repository.Update(user);
                     return Ok(user);
                 }
                 catch(Exception ex)
@@ -47,9 +46,7 @@ namespace Trial_Task.Controllers
             else
             {
                 return BadRequest();
-            }
-            
-            
+            }      
         }
     }
 }
