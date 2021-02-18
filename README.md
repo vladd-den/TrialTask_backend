@@ -14,4 +14,4 @@ In order to run the project you need to configure localhost port, or you can lea
 
 ## Additional
 
-You need to fill the database manually using services for managing the databases, for example Microsoft Managment Studio.
+To fill the database you need just to run the migration
